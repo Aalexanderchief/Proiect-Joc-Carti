@@ -1,0 +1,19 @@
+struct nod{
+    int carte;
+    nod *next;
+};
+
+void random_(nod *&cap){
+    int tragere=rand()%52;
+    nod *nou=new nod;
+    nou->carte=tragere;
+    nou->next=NULL;
+    if(cap==NULL){
+        cap=new nod;
+    }
+    nod *curent=cap;
+    while(curent->next!=NULL){
+        curent=curent->next;
+    }
+    curent->next=new nod;
+}

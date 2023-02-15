@@ -1,0 +1,21 @@
+int calculare(nod *cap){
+    int total=0;
+    int asi=0;
+    nod *curent=cap;
+    while(curent!=NULL){
+        int valoare=curent->carte %13 +1;
+        if(valoare>10){
+            valoare=10;
+        }
+        if(valoare==1){
+            asi++;
+        }
+        total+=valoare;
+        curent=curent->next;
+    }
+    while(total<=11 && asi>0){
+        total+=10;
+        asi--;
+    }
+    return total;
+}
