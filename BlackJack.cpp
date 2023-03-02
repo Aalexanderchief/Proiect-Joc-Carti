@@ -5,121 +5,146 @@
 #include <cstdlib>
 #include <time.h>
 using namespace std;
-struct nod{
-    int carte;
-    nod *next;
-};
+int nrjuc;
+struct carte{
+    int val, tip, valj;
+    carte *next;
+}*pachet;
 
-void random_(nod *&cap){
-    int tragere=rand()%52;
-    nod *nou=new nod;
-    nou->carte=tragere;
-    nou->next=NULL;
-    if(cap==NULL){
-        cap=new nod;
+struct jucatori{
+    int nrcastig=0;
+    carte *mana=NULL;
+}juc[10];
+
+carte* generarePachet(){
+    int v[52]={0},x,simb,val;
+    int cr=52;
+    carte* p=NULL,*q;
+    while(cr>0){
+        x=rand()%52;
+        if(v[x]==0){
+            v[x]=1;
+            cr--;
+            simb=x%4;
+            val=x%13+1;
+            if(val>10){
+                val++;
+            }
+            q=new carte;
+            q->tip=simb;
+            q->val=val;
+            if(q->val<10){
+                q->valj=q->val;
+            }
+            else q->valj=10;
+            q->next=p;
+            p=q;
+        }
     }
-    nod *curent=cap;
-    while(curent->next!=NULL){
-        curent=curent->next;
-    }
-    curent->next=nou;
+    return p;
 }
 
-int calculare(nod *cap){
+void parcurgere(carte *p){
+    while(p){
+        cout<<p->tip<<" "<<p->val<<" "<<p->valj<<'\n';
+        p=p->next;
+    }
+}
+int calcTotal(carte *mana){
     int total=0;
     int asi=0;
-    nod *curent=cap;
-    while(curent!=NULL){
-        int valoare=curent->carte%13+1;
-        if(valoare>10){
-            valoare=10;
-        }
-        if(valoare==1){
+    while(mana!=NULL) {
+        total+=mana->valj;
+        if(mana->val==1) {
             asi++;
         }
-        total+=valoare;
-        curent=curent->next;
+        mana=mana->next;
     }
-    while(total<=11 && asi>0){
-        total+=10;
+    while(asi>0){
+        if(total+10<=21) {
+            total+=10;
+        }
         asi--;
     }
     return total;
 }
 
-void BlackJack(){
-    nod *mana_jucator=NULL;
-    nod *mana_dealer=NULL;
-    random_(mana_jucator);
-    random_(mana_dealer);
-    random_(mana_jucator);
-    random_(mana_dealer);
-    cout<<"Mana jucatorului: "<<'\n';
-    nod *curent=mana_jucator;
-    while(curent!=NULL){
-        cout<<curent->carte<<'\n';
-        curent=curent->next;
-    }
-    cout<<"Total: "<<calculare(mana_jucator)<<endl;
-    cout<<"Mana dealurului:"<<endl;
-    cout<<mana_dealer->carte<<endl;
-    cout<<"Carte Ascunsa"<<endl;
-    while(calculare(mana_jucator)<21) {
-        char action;
-        cout<<"Hit or stand?";
-        cin>>action;
-        if(action=='h'){
-            random_(mana_jucator);
-            cout<<"Mana jucatorului:"<<endl;
-            curent=mana_jucator;
-            while(curent!=NULL) {
-                cout<<curent->carte<<endl;
-                curent=curent->next;
+void joc(){
+    carte *q;
+    for(int i=1;i<=nrjuc;i++){
+        juc[i].mana=NULL;
+        for(int j=0;j<2;j++){
+            q=pachet;
+            pachet=pachet->next;
+            q->next=juc[i].mana;
+            juc[i].mana=q;
+        }
+        int total_jucator=0;
+        while(juc[i].mana!=NULL){
+            cout<<"Cartile jucatorului "<<i<<":"<<endl;
+            parcurgere(juc[i].mana);
+            cout<<endl;
+            total_jucator=calcTotal(juc[i].mana);
+            cout<<"Total: "<<total_jucator<<endl;
+            if(total_jucator>21){
+                cout<<"Ai pierdut! Punctajul tău este mai mare de 21!"<<endl;
+                break;
             }
-            cout<<"Total: "<<calculare(mana_jucator)<<endl;
+            char raspuns;
+            do{
+                cout<<"Doresti sa mai tragi o carte?";
+                cin>>raspuns;
+            }while(raspuns!='D' && raspuns!='d' && raspuns!='N' && raspuns!='n');
+            if(raspuns=='D' || raspuns=='d'){
+                q=pachet;
+                pachet=pachet->next;
+                q->next=juc[i].mana;
+                juc[i].mana=q;
+            }
+            else{
+                break;
+            }
+        }
+    }
+    while(juc[0].mana!=NULL) {
+        int total=calcTotal(juc[0].mana);
+        if(total<rand()%4+16) {
+            q=pachet;
+            pachet=pachet->next;
+            q->next=juc[0].mana;
+            juc[0].mana=q;
         }
         else{
             break;
         }
     }
-    while(calculare(mana_dealer)<17) {
-        random_(mana_dealer);
-        cout<<"Mana dealurului:"<<endl;
-        curent=mana_dealer;
-        while(curent!=NULL) {
-            cout<<curent->carte<<endl;
-            curent=curent->next;
+    int dealerTotal=calcTotal(juc[0].mana);
+    for(int i=1;i<=nrjuc;i++) {
+        int total=calcTotal(juc[i].mana);
+        if(total>21 || (total<=dealerTotal && dealerTotal <=21)) {
+            juc[i].nrcastig--;
+            juc[0].nrcastig++;
         }
-        cout<<"Total: "<<calculare(mana_dealer)<<endl;
-    }
-
-    int jtotal=calculare(mana_jucator);
-    int dtotal=calculare(mana_dealer);
-    if(jtotal>21) {
-        cout<<"Ai pierdut."<< endl;
-    }
-    else if(dtotal>21) {
-        cout<<"Ai castigat." << endl;
-    }
-    else if(jtotal>dtotal){
-        cout<<"Ai castigat." << endl;
-    }
-    else if(dtotal>jtotal){
-        cout<<"Ai pierdut."<<endl;
-    }
-    else{
-        cout<<"Push. Nimeni nu a castigat."<<endl;
+        else{
+            juc[i].nrcastig++;
+            juc[0].nrcastig--;
+        }
     }
 }
-
 int main()
 {
-    srand(time(NULL));
     char alegere;
+    srand(time(NULL));
+    cout<<"Introduceti numarul de jucatori: ";
+    cin>>nrjuc;
     do{
-        BlackJack();
-        cout<<"Play again? (y/n):";
+        joc();
+        for(int i=1;i<=nrjuc;i++){
+            cout<<juc[i].nrcastig<<" "<<'\n';
+        }
+        cout<<juc[0].nrcastig<<" "<<'\n';
+        cout<<"Jucam din nou?";
         cin>>alegere;
-    }while(alegere=='y');
+    }while(alegere=='d'|| alegere == 'D');
     return 0;
 }
