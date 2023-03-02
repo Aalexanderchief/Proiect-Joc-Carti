@@ -4,8 +4,15 @@
 #include <bits/stdc++.h>
 #include <cstdlib>
 #include <time.h>
+#include <winbgim.h>
+#include <graphics.h
+
 using namespace std;
+
+ifstream fin ("New Text Document(3).txt");
+
 int nrjuc;
+
 struct carte{
     int val, tip, valj;
     carte *next;
@@ -130,6 +137,26 @@ void joc(){
             juc[0].nrcastig--;
         }
     }
+}
+void afisare();
+{
+    initwindow(1000, 1000, "Black Jack");
+    setbkcolor(BLACK);
+    setcolor(GREEN);
+    
+    settextstyle(7, 0, 5);
+    outtextxy(200, 200, "Bine ati venit la joc!");
+    outtextxy(200, 400, "Doresti sa joci?");
+    outtextxy(250, 450, "Alege una dintre optiuni");
+    
+    getch();
+    cleardevice();
+    outtextxy(100, 200, "Cartile jucatorului");
+    readimagefile(carte->valj, 100, 100, 300, 400);
+    readimagefile(carte->val, 300, 100, 500, 400);
+    
+    getch();
+    closegraph();
 }
 int main()
 {
