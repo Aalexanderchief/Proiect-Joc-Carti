@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <time.h>
 #include <winbgim.h>
-#include <graphics.h
+#include <graphics.h>
 
 using namespace std;
 
@@ -49,6 +49,21 @@ carte* generarePachet(){
         }
     }
     return p;
+}
+
+void adimagine(carte *p){
+    carte *q;
+    int valf, tipf;
+    char numeimg[30];
+    while(fin>>valf>>tipf){
+        fin>>numeimg;
+        q=p;
+        for(int i=1; i<= 52; i++){
+            if(q->val==valf && q->tip==tipf)
+                strcpy(q->img, numeimg);
+            else q=q->leg;
+        }
+    }
 }
 
 void parcurgere(carte *p){
@@ -149,11 +164,32 @@ void afisare();
     outtextxy(200, 400, "Doresti sa joci?");
     outtextxy(250, 450, "Alege una dintre optiuni");
     
+    for(i=1; i<=1000, i=i+200){
+        readimagefile(carte->next,50+i, 50, 300+i, 400);
+        outtextxy(100, 200, "Cartile jucatorului");
+    }
+    if(total_jucator>21){
+        cleardevice();
+        settextstyle(7, 0, 5);
+        outtextxy(100, 100, "Ai pierdut! Punctajul tau este mai mare de 21.");
+        break;
+    }
+    if(dealer_total>21){
+        cleardevice();
+        settextstyle(7, 0, 5);
+        outtextxy(100, 100, "Ai castigat! Punctajul dealerului este mai mare de 21.");
+        break;
+    }
+    if(dealer_total>21 && total_jucator>21){
+        cleardevice();
+        settextstyle(7, 0, 5);
+        outtextxy(100, 100, "Toti ati pierdut! Punctajele voastre depasesc 21.");
+        break;
+    }
     getch();
     cleardevice();
-    outtextxy(100, 200, "Cartile jucatorului");
-    readimagefile(carte->valj, 100, 100, 300, 400);
-    readimagefile(carte->val, 300, 100, 500, 400);
+    settextstyle(6, 0, 5);
+    outtextxy(100, 100, "Jucam din nou?");
     
     getch();
     closegraph();
