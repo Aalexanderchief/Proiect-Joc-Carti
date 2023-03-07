@@ -103,18 +103,13 @@ void joc(){
         }
         int total_jucator=0;
         while(juc[i].mana!=NULL){
-            cout<<"Cartile jucatorului "<<i<<":"<<endl;
             parcurgere(juc[i].mana);
-            cout<<endl;
             total_jucator=calcTotal(juc[i].mana);
-            cout<<"Total: "<<total_jucator<<endl;
             if(total_jucator>21){
-                cout<<"Ai pierdut! Punctajul tău este mai mare de 21!"<<endl;
                 break;
             }
             char raspuns;
             do{
-                cout<<"Doresti sa mai tragi o carte?";
                 cin>>raspuns;
             }while(raspuns!='D' && raspuns!='d' && raspuns!='N' && raspuns!='n');
             if(raspuns=='D' || raspuns=='d'){
@@ -158,12 +153,12 @@ void afisare();
     initwindow(1000, 1000, "Black Jack");
     setbkcolor(BLACK);
     setcolor(GREEN);
-    
+
     settextstyle(7, 0, 5);
     outtextxy(200, 200, "Bine ati venit la joc!");
     outtextxy(200, 400, "Doresti sa joci?");
     outtextxy(250, 450, "Alege una dintre optiuni");
-    
+
     for(i=1; i<=1000, i=i+200){
         readimagefile(carte->next,50+i, 50, 300+i, 400);
         outtextxy(100, 200, "Cartile jucatorului");
@@ -190,7 +185,7 @@ void afisare();
     cleardevice();
     settextstyle(6, 0, 5);
     outtextxy(100, 100, "Jucam din nou?");
-    
+
     getch();
     closegraph();
 }
@@ -198,7 +193,6 @@ int main()
 {
     char alegere;
     srand(time(NULL));
-    cout<<"Introduceti numarul de jucatori: ";
     cin>>nrjuc;
     do{
         joc();
@@ -206,7 +200,6 @@ int main()
             cout<<juc[i].nrcastig<<" "<<'\n';
         }
         cout<<juc[0].nrcastig<<" "<<'\n';
-        cout<<"Jucam din nou?";
         cin>>alegere;
     }while(alegere=='d'|| alegere == 'D');
     return 0;
