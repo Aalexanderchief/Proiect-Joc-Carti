@@ -16,6 +16,7 @@ int nrjuc;
 struct carte{
     int val, tip, valj;
     carte *next;
+    char* img;
 }*pachet;
 
 struct jucatori{
@@ -61,7 +62,7 @@ void adimagine(carte *p){
         for(int i=1; i<= 52; i++){
             if(q->val==valf && q->tip==tipf)
                 strcpy(q->img, numeimg);
-            else q=q->leg;
+            else q=q->next;
         }
     }
 }
@@ -123,7 +124,10 @@ void joc(){
             }
         }
     }
+    //for
+    //do
     while(juc[0].mana!=NULL) {
+            //parcurgere
         int total=calcTotal(juc[0].mana);
         if(total<rand()%4+16) {
             q=pachet;
@@ -148,7 +152,7 @@ void joc(){
         }
     }
 }
-void afisare();
+void afisare()
 {
     initwindow(1000, 1000, "Black Jack");
     setbkcolor(BLACK);
